@@ -1,0 +1,139 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.neo</groupId>
+	<artifactId>neoprovider5</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>neoprovider5</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.netscape</groupId>
+			<artifactId>ldapjdk</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>net.sf.proguard</groupId> -->
+<!-- 			<artifactId>proguard-base</artifactId> -->
+<!-- 			<version>5.2.1</version> -->
+<!-- 		</dependency> -->
+
+		<!-- <dependency>
+			<groupId>com.github.wvengen</groupId>
+			<artifactId>proguard-maven-plugin</artifactId>
+			<version>2.0.10</version>
+		</dependency>		 -->
+
+	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>nexus-deployment</id>
+			<name>Nexus Repository</name>
+			<url>http://secuhap.iptime.org:8081/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</distributionManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+					</archive>
+				</configuration>
+			</plugin>		
+			
+			<!-- <plugin>
+				<groupId>com.pyx4me</groupId>
+	        	<artifactId>proguard-maven-plugin</artifactId>
+	        	<version>2.0.4</version>
+	        	<groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<version>2.0.11</version>
+	        	<executions>
+				   install 단계에서 proguard goal 을 쓰겠다는 설정
+	               <execution>	              	 
+	                   <phase>package</phase>
+	                   <goals><goal>proguard</goal></goals>
+	               </execution>
+	            </executions>
+	            <configuration>
+	                 <skip>false</skip>
+	                <obfuscate>true</obfuscate>
+	                  <addMavenDescriptor>false</addMavenDescriptor>
+	                <injar>neoprovider5-1.0.0-SNAPSHOT.jar</injar>
+	                <injarNotExistsSkip>false</injarNotExistsSkip>
+	   				 <inFilter>!com/neo/security/provider/**</inFilter>
+					최종 output 파일의 이름
+	                <outjar>neoprovider5-1.0.0-obfuscated.jar</outjar>
+	                <outputDirectory>${project.build.directory}</outputDirectory>
+	                자세한 설정을 한 외부 파일 경로 지정
+	                <proguardInclude>proguard.conf</proguardInclude> 
+	             	   <includedepedency>false</includedepedency>
+	                <libs>
+	                    <lib>${java.home}/lib/rt.jar</lib>
+	                    <lib>${java.home}/lib/jsse.jar</lib>
+	                </libs>
+	
+					메모리 부족 에러를 만난다면. 아래처럼 추가해주면 됩니다.
+	                <maxMemory>512m</maxMemory>
+	                <assembly>	
+						com.neo.security.pkcs 를 난독기 적용 대상으로 삼겠다는 설정
+	                    <inclusions>
+	                        <inclusion>
+	                        	<groupId>com.netscape</groupId>
+	                        	<artifactId>ldapjdk</artifactId>
+	                        </inclusion>
+	                    </inclusions>
+	                </assembly>   
+	
+					난독기 적용 대상 소스가 참조하는 라이브러리에 대해서 관련 그룹이 아닌것은 제외하겠다는 설정
+	              	 <exclusions>
+	                    <exclusion><groupId>com.neo.security.certpath</groupId></exclusion>
+	                </exclusions>
+	            </configuration>
+	        </plugin> -->
+	        
+	        <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>sign</id>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- <archive>${project.build.directory}/neoprovider5-1.0.0-obfuscated.jar</archive> -->
+					<keystore>${project.basedir}/jcekey.store</keystore>
+					<alias>neocert</alias>
+					<storepass>a123456A</storepass>
+					<tsa>http://timestamp.comodoca.com/rfc3161</tsa>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+
+</project>
